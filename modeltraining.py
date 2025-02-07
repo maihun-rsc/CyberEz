@@ -1,6 +1,6 @@
 """
 Phishing URL Detection Model Training Script
-Author: Rananjay Singh Chauhan
+Author: Rananjay Singh Chauhan, Granth Satsangi
 Description: Comparative analysis of machine learning models for phishing URL detection
 """
 
@@ -21,6 +21,34 @@ from xgboost import XGBClassifier
 from keras.models import Model
 from keras.layers import Input, Dense
 import joblib
+# generate_scaler.py
+
+# Load your dataset (update path to match your CSV location)
+dataset_path = r"C:\Users\ranan\OneDrive\Documents\Phishing app\Datasets\URL\urldata.csv"  # Update this path
+phishing_data = pd.read_csv(dataset_path, encoding='ISO-8859-1')
+
+# Preprocess data (same as in training)
+processed_data = phishing_data.drop('Domain', axis=1)
+target = processed_data['Label']
+features = processed_data.drop('Label', axis=1)
+
+# Create train/test split (same parameters as original training)
+X_train, X_test, y_train, y_test = train_test_split(
+    features, 
+    target, 
+    test_size=0.2, 
+    random_state=42, 
+    stratify=target
+)
+
+# Create and fit the scaler
+scaler = StandardScaler()
+scaler.fit(X_train)  # Only fit on training data
+
+# Save the scaler
+joblib.dump(scaler, 'scaler.pkl')
+
+print("Scaler successfully created and saved as scaler.pkl")
 
 # ==================== Data Loading & Preparation ====================
 print("\n[1/6] Loading and preprocessing dataset...")
